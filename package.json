@@ -1,7 +1,7 @@
 {
    "name": "shard",
    "version": "0.0.1",
-   "private":true,
+   "private": true,
    "main": "index.js",
    "repository": "https://github.com/japiirainen/shard.git",
    "author": "Joona Piirainen <joona.piirainen@gmail.com>",
@@ -41,9 +41,10 @@
       "ultra-runner": "^3.10.5"
    },
    "scripts": {
-     "prettier:check": "prettier --check .",
+      "prettier:check": "prettier --check .",
       "check-sources": "yarn prettier:check && yarn --cwd backend check-sources",
       "format": "prettier --write .",
-      "up": "ultra -r ncu -u --packageFile package.json && ncu -u --packageFile package.json"
+      "up": "ultra -r ncu -u --packageFile package.json && ncu -u --packageFile package.json",
+      "dev:server": "cd apps/server && yarn start"
    }
 }
