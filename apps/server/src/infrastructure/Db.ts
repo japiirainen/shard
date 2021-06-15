@@ -1,11 +1,10 @@
 import * as TE from 'fp-ts/TaskEither'
 import * as O from 'fp-ts/Option'
-import { Pool, PoolClient, QueryResult } from 'pg'
-import { migrate } from 'postgres-migrations'
+import { Pool, PoolClient, PoolConfig, QueryResult } from 'pg'
 import { CustomError } from 'ts-custom-error'
 import { v4 as uuid } from 'uuid'
 
-import { DATABASE_URL } from './config'
+import { DATABASE_URL } from './Config'
 import { ApplicationError } from './error'
 import { logger } from './logger'
 import { memoize } from './Memoize'
@@ -16,22 +15,12 @@ export class DBError extends CustomError implements ApplicationError {
    log = true
 }
 
-export const cratePgPool = async (): Promise<Pool | null> => {
-   const pool = new Pool({ connectionString: DATABASE_URL })
-
-   try {
-      const client = await pool.connect()
-      try {
-         await migrate({ client }, 'sql')
-      } finally {
-         await client.release()
-      }
-   } catch (e) {
-      logger.error('Failed to connect to db')
-      return null
-   }
-   return pool
+const pgConf: PoolConfig = {
+   connectionString: DATABASE_URL,
+   max: 50,
 }
+
+export const createPgPool = (): Pool => new Pool(pgConf)
 
 /**
  * HOF for queries

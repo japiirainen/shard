@@ -23,6 +23,7 @@
       "graphql-tools": "^7.0.5",
       "io-ts": "^2.2.16",
       "io-ts-types": "^0.5.16",
+      "node-pg-migrate": "^5.9.0",
       "pg": "^8.6.0",
       "pino": "^6.11.3",
       "pino-http": "^5.5.0",
@@ -61,7 +62,9 @@
    },
    "scripts": {
       "start:dev": "npm-run-all --parallel watch apidocs:dev",
-      "start": "TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling NODE_ENV=development nodemon --watch . --watch ../../packages --exec ts-node -r tsconfig-paths/register --transpile-only ./src/start-server.ts"
+      "start": "TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling NODE_ENV=development nodemon --watch . --watch ../../packages --exec ts-node -r tsconfig-paths/register --transpile-only ./src/start-server.ts",
+      "migrate:up": "node-pg-migrate up",
+      "migrate:down": "node-pg-migrate down"
    },
    "engines": {
       "node": ">=15"

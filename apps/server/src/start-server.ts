@@ -4,13 +4,13 @@ dotenv.config()
 
 import { ApolloServer } from 'apollo-server-express'
 import { applyMiddleware } from 'graphql-middleware'
-import { PrismaClient } from '@prisma/client'
 
-import { PORT } from '@/infrastructure/config'
-import { schema } from '@/graphql/schema'
+import { PORT } from '@/infrastructure/Config'
+import { schema } from '@/graphql/Schema'
 import { logger, httpLogger } from '@/infrastructure/Logger'
-
-const prisma = new PrismaClient()
+import { createPgPool } from '@/infrastructure/db'
+import { MyContext } from './graphql/Context'
+const pool = createPgPool()
 ;(async () => {
    const app = express()
    // ? Middleware
@@ -19,7 +19,7 @@ const prisma = new PrismaClient()
 
    const server = new ApolloServer({
       schema: applyMiddleware(schema),
-      context: ctx => ({ ...ctx, repo: prisma, logger }),
+      context: (ctx): MyContext => ({ ...ctx, repo: pool, logger }),
       introspection: true,
       playground: true,
       logger,
@@ -38,4 +38,4 @@ const prisma = new PrismaClient()
       )
    )
    .catch(logger.error)
-   .finally(() => prisma.$disconnect())
+   .finally(() => pool.end())
