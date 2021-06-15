@@ -1,6 +1,4 @@
 import express from 'express'
-import pino from 'pino'
-import httpPino from 'pino-http'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -8,12 +6,11 @@ import { ApolloServer } from 'apollo-server-express'
 import { applyMiddleware } from 'graphql-middleware'
 import { PrismaClient } from '@prisma/client'
 
-import { PORT } from './config'
-import { schema } from './graphql/schema'
+import { PORT } from '@/infrastructure/config'
+import { schema } from '@/graphql/schema'
+import { logger, httpLogger } from '@/infrastructure/Logger'
 
 const prisma = new PrismaClient()
-const logger = pino({ prettyPrint: true })
-const httpLogger = httpPino({ prettyPrint: true })
 ;(async () => {
    const app = express()
    // ? Middleware
