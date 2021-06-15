@@ -7,9 +7,18 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Link {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  description String
-  url         String
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  Profile   Profile[]
+}
+
+model Profile {
+  id        Int    @id @default(autoincrement())
+  biography String @db.VarChar(500)
+  userId    Int
+  user      User   @relation(fields: userId, references: id)
 }
