@@ -1,3 +1,5 @@
-import infoResolver from '../entities/info'
-
-export default infoResolver
+export const resolvers = {
+   Query: {
+      info: () => 'Shard workout app API',
+   },
+}

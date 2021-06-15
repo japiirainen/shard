@@ -1,24 +1,44 @@
+import express from 'express'
+import pino from 'pino'
+import httpPino from 'pino-http'
 import dotenv from 'dotenv'
-
-import { ApolloServer } from 'apollo-server'
-import { PrismaClient } from '@prisma/client'
-
-import typeDefs from './graphql/schema'
-import resolvers from './graphql/resolvers'
-import { HOST, PORT } from './config'
-
 dotenv.config()
 
+import { ApolloServer } from 'apollo-server-express'
+import { applyMiddleware } from 'graphql-middleware'
+import { PrismaClient } from '@prisma/client'
+
+import { PORT } from './config'
+import { schema } from './graphql/schema'
+
 const prisma = new PrismaClient()
+const logger = pino({ prettyPrint: true })
+const httpLogger = httpPino({ prettyPrint: true })
+;(async () => {
+   const app = express()
+   // ? Middleware
+   app.set('trust proxy', 1)
+   app.use(httpLogger)
 
-const server = new ApolloServer({
-   typeDefs,
-   resolvers,
-})
+   const server = new ApolloServer({
+      schema: applyMiddleware(schema),
+      context: ctx => ({ ...ctx, repo: prisma, logger }),
+      introspection: true,
+      playground: true,
+      logger,
+   })
 
-console.log(HOST)
-console.log(PORT)
+   server.applyMiddleware({
+      app,
+      cors: false,
+   })
 
-server
-   .listen({ port: PORT, host: HOST })
-   .then(({ url }) => console.log(`Server listening on: ${url}`))
+   return [app, server] as const
+})()
+   .then(([app, server]) =>
+      app.listen(PORT, () =>
+         logger.info(`Server running at: http://localhost:${PORT}${server.graphqlPath}`)
+      )
+   )
+   .catch(logger.error)
+   .finally(() => prisma.$disconnect())
