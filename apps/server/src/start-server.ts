@@ -15,11 +15,10 @@ const pool = createPgPool()
    const app = express()
    // ? Middleware
    app.set('trust proxy', 1)
-   app.use(httpLogger)
 
    const server = new ApolloServer({
       schema: applyMiddleware(schema),
-      context: (ctx): MyContext => ({ ...ctx, repo: pool, logger }),
+      context: (ctx): MyContext => ({ ...ctx, pool, logger }),
       introspection: true,
       playground: true,
       logger,

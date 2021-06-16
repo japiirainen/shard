@@ -5,6 +5,6 @@ import { Logger } from 'pino'
 export type MyContext = {
    req: Request
    res: Response
-   repo: Pool
+   pool: Pool
    logger: Logger
 }

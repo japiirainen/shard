@@ -9,7 +9,7 @@ import { ApplicationError } from './error'
 export const doTE = <T>(task: TE.TaskEither<ApplicationError, T>): Promise<T> =>
    task().then(
       E.fold((err: ApplicationError) => {
-         logger.error(err.code)
+         logger.error(err)
          throw new ApolloError(err.code)
       }, identity)
    )

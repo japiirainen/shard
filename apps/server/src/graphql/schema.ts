@@ -1,13 +1,9 @@
-import gql from 'graphql-tag'
-
 import { makeExecutableSchema } from 'apollo-server-express'
 
 import { resolvers } from './Resolvers'
+import { userSchema } from './user'
 
-const typeDefs = gql`
-   type Query {
-      info: String!
-   }
-`
-
-export const schema = makeExecutableSchema({ typeDefs, resolvers })
+export const schema = makeExecutableSchema({
+   typeDefs: [userSchema],
+   resolvers,
+})
