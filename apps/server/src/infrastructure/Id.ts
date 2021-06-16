@@ -1,2 +1,2 @@
 //@ts-ignore
-export type Id<T> = String
+export type Id<T> = number

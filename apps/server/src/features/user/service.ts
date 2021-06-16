@@ -11,8 +11,8 @@ import { CustomError } from 'ts-custom-error'
 import { DBError } from '@/infrastructure/db'
 
 export const getPublicUser = (
-   pool: Pool,
-   id: Id<User>
+   id: Id<User>,
+   pool: Pool
 ): TE.TaskEither<NoUserFound | DBError, PublicUser> =>
    pipe(
       findUserById(id, pool),

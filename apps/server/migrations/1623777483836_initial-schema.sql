@@ -3,29 +3,31 @@ CREATE EXTENSION IF NOT EXISTS citext;
 CREATE TYPE user_type AS ENUM ('athlete', 'coach');
 CREATE TYPE privacy AS ENUM ('private', 'open');
 CREATE TABLE people (
-    id text PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     username text NOT NULL UNIQUE,
     email text DEFAULT '' NOT NULL UNIQUE,
     password text NOT NULL,
-    userType user_type,
-    createdAt date DEFAULT now() NOT NULL,
-    updatedAt date DEFAULT now() NOT NULL
+    user_type user_type,
+    created_at date DEFAULT now() NOT NULL,
+    updated_at date DEFAULT now() NOT NULL
 );
 CREATE TABLE user_profile (
-    id text PRIMARY KEY,
-    profileOwner text REFERENCES people,
+    id bigserial PRIMARY KEY,
+    profile_owner bigserial REFERENCES people,
     bio text DEFAULT '' NOT NULL,
-    avatarUrl text DEFAULT '' NOT NULL
+    avatar_url text DEFAULT '' NOT NULL
 );
 CREATE TABLE training_group (
-    id text PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     name text DEFAULT '' NOT NULL,
-    owner text REFERENCES people,
+    owner bigserial REFERENCES people,
     privacy privacy DEFAULT 'open' NOT NULL,
-    createdAt date DEFAULT now() NOT NULL,
-    updatedAt date DEFAULT now() NOT NULL
+    created_at date DEFAULT now() NOT NULL,
+    updated_at date DEFAULT now() NOT NULL
 );
 -- Down Migration
-DROP TABLE IF EXISTS people;
+DROP TABLE IF EXISTS people CASCADE;
 DROP TABLE IF EXISTS user_profile;
 DROP TABLE IF EXISTS training_group;
+DROP TYPE user_type;
+DROP TYPE privacy;

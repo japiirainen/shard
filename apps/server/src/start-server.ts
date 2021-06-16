@@ -7,12 +7,12 @@ import { applyMiddleware } from 'graphql-middleware'
 
 import { PORT } from '@/infrastructure/Config'
 import { schema } from '@/graphql/Schema'
-import { logger, httpLogger } from '@/infrastructure/Logger'
+import { logger } from '@/infrastructure/Logger'
 import { createPgPool } from '@/infrastructure/db'
 import { MyContext } from './graphql/Context'
-const pool = createPgPool()
 ;(async () => {
    const app = express()
+   const pool = createPgPool()
    // ? Middleware
    app.set('trust proxy', 1)
 
@@ -37,4 +37,3 @@ const pool = createPgPool()
       )
    )
    .catch(logger.error)
-   .finally(() => pool.end())

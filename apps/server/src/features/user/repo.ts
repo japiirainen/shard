@@ -20,5 +20,5 @@ export const findUserById = (
 
 export const findAllUsers = (pool: Pool): TE.TaskEither<DBError, O.Option<Array<User>>> =>
    withConnection(pool, conn =>
-      conn.query('SELECT * FROM people').then(res => O.fromNullable(res.rows))
+      conn.query('SELECT * FROM people;').then(res => O.fromNullable(res.rows))
    )
