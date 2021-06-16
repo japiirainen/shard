@@ -23,9 +23,9 @@ const pgConf: PoolConfig = {
 export const createPgPool = (): Pool => new Pool(pgConf)
 
 /**
- * HOF for queries
+ * HOF for queries with memoization
  */
-export const withConnection =
+export const withConnectionMemo =
    <T extends any[], R>(pool: Pool, memoizeTtl: O.Option<number>) =>
    (
       fn: (client: PoolClient, ...args: T) => Promise<QueryResult>
@@ -53,6 +53,28 @@ export const withConnection =
          () => new DBError('db query error')
       )
    }
+
+/**
+ * HOF for queries
+ */
+
+export const withConnection = <T>(
+   pool: Pool,
+   f: (conn: PoolClient) => Promise<T>
+): TE.TaskEither<DBError, T> =>
+   TE.tryCatch(
+      async () => {
+         const connection = await pool.connect()
+         try {
+            return await f(connection)
+         } catch (e) {
+            throw new DBError(e.message)
+         } finally {
+            await connection.release()
+         }
+      },
+      () => new DBError('db error')
+   )
 
 /**
  * HOF for transactions
