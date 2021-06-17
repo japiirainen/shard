@@ -1,3 +1,3 @@
-import { userResolvers } from './user'
+import { userResolvers } from './User'
 
 export { userResolvers as resolvers }

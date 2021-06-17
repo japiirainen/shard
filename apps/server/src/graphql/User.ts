@@ -10,7 +10,7 @@ import {
    NoUserFound,
 } from '@/features/user/service'
 import { doTE } from '@/infrastructure/Helpers'
-import { MyContext } from '../Context'
+import { MyContext } from './Context'
 import { Id } from '@/infrastructure/Id'
 import { User, UserWithProfile } from '@/domain/User'
 import { Pool } from 'pg'
