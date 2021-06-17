@@ -4,8 +4,14 @@ import { pipe } from 'fp-ts/lib/function'
 import { Pool } from 'pg'
 
 import { Id } from '@/infrastructure/Id'
-import { findAllUsers, findUserById } from '@/features/user/repo'
-import { PublicUser, toPublicUser, User } from '@/domain/User'
+import { findAllUsers, findProfileWithId, findUserById } from '@/features/user/repo'
+import {
+   PublicProfile,
+   PublicUser,
+   toPublicProfile,
+   toPublicUser,
+   User,
+} from '@/domain/User'
 import { ApplicationError } from '@/infrastructure/error'
 import { CustomError } from 'ts-custom-error'
 import { DBError } from '@/infrastructure/db'
@@ -39,13 +45,33 @@ export const allUsers = (
       TE.map(users => users.map(toPublicUser))
    )
 
-class NoUserFound extends CustomError implements ApplicationError {
+export const getPublicProfile = (
+   id: Id<User>,
+   pool: Pool
+): TE.TaskEither<NoProfileFound | DBError, PublicProfile> =>
+   pipe(
+      findProfileWithId(id, pool),
+      TE.chain(maybeProfile =>
+         pipe(
+            maybeProfile,
+            TE.fromOption(() => new NoProfileFound())
+         )
+      ),
+      TE.map(toPublicProfile)
+   )
+
+export class NoUserFound extends CustomError implements ApplicationError {
    status = 404
    code = 'NoUserFound'
    log = true
 }
-class NoUsersFound extends CustomError implements ApplicationError {
+export class NoUsersFound extends CustomError implements ApplicationError {
    status = 404
    code = 'NoUsersFound'
+   log = true
+}
+export class NoProfileFound extends CustomError implements ApplicationError {
+   status = 404
+   code = 'NoProfileFound'
    log = true
 }
