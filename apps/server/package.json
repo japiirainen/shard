@@ -64,7 +64,8 @@
       "start:dev": "npm-run-all --parallel watch apidocs:dev",
       "start": "TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling NODE_ENV=development nodemon --watch . --watch ../../packages --exec ts-node -r tsconfig-paths/register --transpile-only ./src/start-server.ts",
       "migrate:up": "node-pg-migrate up",
-      "migrate:down": "node-pg-migrate down"
+      "migrate:down": "node-pg-migrate down",
+      "compile": "tsc --noEmit --watch"
    },
    "engines": {
       "node": ">=15"

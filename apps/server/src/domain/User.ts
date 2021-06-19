@@ -1,7 +1,8 @@
+import { Id } from '@/infrastructure/Id'
 export type USER_TYPE = 'coach' | 'athlete'
 
-export type User = {
-   id: number
+export type DbUser = {
+   id: Id<DbUser>
    username: String
    email: String
    password: String
@@ -10,15 +11,15 @@ export type User = {
    updated_at: Date
 }
 
-export type Profile = {
-   id: number
+export type DbProfile = {
+   id: Id<DbProfile>
    profile_owner: number
    bio: String
    avatar_url: String
 }
 
 export type PublicUser = {
-   id: number
+   id: Id<PublicUser>
    username: String
    email: String
    userType: USER_TYPE
@@ -31,12 +32,12 @@ export type PublicProfile = {
 
 export type UserWithProfile = PublicUser & { profile: PublicProfile }
 
-export const toPublicProfile = (profile: Profile): PublicProfile => ({
+export const toPublicProfile = (profile: DbProfile): PublicProfile => ({
    bio: profile.bio,
    avatarUrl: profile.avatar_url,
 })
 
-export const toPublicUser = (user: User): PublicUser => ({
+export const toPublicUser = (user: DbUser): PublicUser => ({
    id: user.id,
    username: user.username,
    email: user.email,

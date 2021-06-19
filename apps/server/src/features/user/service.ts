@@ -1,6 +1,5 @@
-import * as TE from 'fp-ts/lib/TaskEither'
+import { TE, pipe } from '@/infrastructure/fpts'
 
-import { pipe } from 'fp-ts/lib/function'
 import { Pool } from 'pg'
 
 import { Id } from '@/infrastructure/Id'
@@ -10,14 +9,14 @@ import {
    PublicUser,
    toPublicProfile,
    toPublicUser,
-   User,
+   DbUser,
 } from '@/domain/User'
 import { ApplicationError } from '@/infrastructure/error'
 import { CustomError } from 'ts-custom-error'
 import { DBError } from '@/infrastructure/db'
 
 export const getPublicUser = (
-   id: Id<User>,
+   id: Id<DbUser>,
    pool: Pool
 ): TE.TaskEither<NoUserFound | DBError, PublicUser> =>
    pipe(
@@ -46,7 +45,7 @@ export const allUsers = (
    )
 
 export const getPublicProfile = (
-   id: Id<User>,
+   id: Id<DbUser>,
    pool: Pool
 ): TE.TaskEither<NoProfileFound | DBError, PublicProfile> =>
    pipe(

@@ -12,7 +12,7 @@ import {
 import { doTE } from '@/infrastructure/Helpers'
 import { MyContext } from './Context'
 import { Id } from '@/infrastructure/Id'
-import { User, UserWithProfile } from '@/domain/User'
+import { DbUser, UserWithProfile } from '@/domain/User'
 import { Pool } from 'pg'
 import { DBError } from '@/infrastructure/Db'
 
@@ -49,7 +49,7 @@ export const userSchema = gql`
    }
 `
 
-type UserArgs = { id: Id<User> }
+type UserArgs = { id: Id<DbUser> }
 export const userResolvers = {
    Query: {
       user: (_: any, { id }: UserArgs, { pool }: MyContext) =>
@@ -62,7 +62,7 @@ export const userResolvers = {
 
 // --------------------------------------------------------------------------
 const getUserWithProfile = (
-   id: Id<User>,
+   id: Id<DbUser>,
    pool: Pool
 ): TE.TaskEither<DBError | NoUserFound | NoProfileFound, UserWithProfile> =>
    pipe(
