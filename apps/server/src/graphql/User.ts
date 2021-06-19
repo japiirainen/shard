@@ -1,6 +1,5 @@
-import * as TE from 'fp-ts/lib/TaskEither'
+import { TE, pipe } from '@/infrastructure/fpts'
 import gql from 'graphql-tag'
-import { pipe } from 'fp-ts/lib/function'
 
 import {
    allUsers,
