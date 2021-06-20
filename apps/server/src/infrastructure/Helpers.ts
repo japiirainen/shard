@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-express'
-import { redBright } from 'chalk'
+import { blueBright } from 'chalk'
 
 import { TE, E, trace, traceWithValue, flow } from '@/infrastructure/fpts'
 import { identity, pipe } from 'fp-ts/lib/function'
@@ -22,7 +22,8 @@ export const withDebug =
               TE.of(undefined),
               TE.map(
                  trace(
-                    redBright('[DEBUG]') + `-${new Date().toLocaleTimeString()} => ${msg}`
+                    blueBright('[DEBUG]') +
+                       `-${new Date().toLocaleTimeString()} => ${msg}`
                  )
               ),
               TE.chain(() => task)

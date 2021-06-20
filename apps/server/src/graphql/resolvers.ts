@@ -10,8 +10,14 @@ export type Resolver = {
 
 const ResolverSemiGroup: Monoid<Resolver> = {
    concat: (r1, r2) => ({
-      ...r1,
-      ...r2,
+      Query: {
+         ...r1.Query,
+         ...r2.Query,
+      },
+      Mutation: {
+         ...r1.Mutation,
+         ...r2.Mutation,
+      },
    }),
    empty: { Mutation: {}, Query: {} },
 }
