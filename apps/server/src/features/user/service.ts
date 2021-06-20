@@ -1,4 +1,4 @@
-import { TE, pipe, A } from '@/infrastructure/fpts'
+import { TE, pipe, A, withDebug } from '@/infrastructure/fpts'
 
 import { Pool } from 'pg'
 
@@ -20,7 +20,7 @@ export const getPublicUser = (
    pool: Pool
 ): TE.TaskEither<NoUserFound | DBError, PublicUser> =>
    pipe(
-      findUserById(id, pool),
+      withDebug(findUserById(pool)(id))(`Getting user with id: ${id}`),
       TE.chain(maybeUser =>
          pipe(
             maybeUser,
@@ -34,7 +34,7 @@ export const allUsers = (
    pool: Pool
 ): TE.TaskEither<NoUsersFound | DBError, PublicUser[]> =>
    pipe(
-      findAllUsers(pool),
+      withDebug(findAllUsers(pool))('Getting all users'),
       TE.chain(maybeUsers =>
          pipe(
             maybeUsers,
@@ -49,7 +49,7 @@ export const getPublicProfile = (
    pool: Pool
 ): TE.TaskEither<NoProfileFound | DBError, PublicProfile> =>
    pipe(
-      findProfileWithId(id, pool),
+      withDebug(findProfileWithId(id, pool))(`Getting profile with id: ${id}`),
       TE.chain(maybeProfile =>
          pipe(
             maybeProfile,

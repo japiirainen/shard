@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import { Pool } from 'pg'
 
 import { pipe, TE } from '@/infrastructure/fpts'
 import {
@@ -7,12 +8,11 @@ import {
    findAllTrainingGroups,
 } from '@/features/trainingGroup/service'
 import { NewTrainingGroup } from '@/features/trainingGroup/repo'
-import { MyContext } from './Context'
-import { Resolver } from './Resolvers'
+import { MyContext } from '@/graphql/Context'
+import { Resolver } from '@/graphql/Resolvers'
 import { doTE } from '@/infrastructure/Helpers'
 import { Id } from '@/infrastructure/Id'
 import { DbTrainingGroup } from '@/domain/TrainingGroup'
-import { Pool } from 'pg'
 import { getPublicUser } from '@/features/user/service'
 
 export const trainingGroupSchema = gql`

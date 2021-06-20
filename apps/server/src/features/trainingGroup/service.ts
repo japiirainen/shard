@@ -1,4 +1,4 @@
-import { pipe, TE, A } from '@/infrastructure/fpts'
+import { pipe, TE, A, withDebug } from '@/infrastructure/fpts'
 import {
    NewTrainingGroup,
    findTrainingGroupbyId,
@@ -21,7 +21,7 @@ export const getPublicTrainingGroup = (
    pool: Pool
 ): TE.TaskEither<DBError | NoTrainingGroupFound, PublicTrainingGroup> =>
    pipe(
-      findTrainingGroupbyId(id, pool),
+      withDebug(findTrainingGroupbyId(id, pool))(`Getting training group with id: ${id}`),
       TE.chain(maybeTg =>
          pipe(
             maybeTg,
@@ -39,7 +39,11 @@ export const createTrainingGroup = (
       NewTrainingGroup.decode(newTg),
       TE.fromEither,
       TE.mapLeft(() => new TrainingGroupDecodeError()),
-      TE.chain(tg => insertTrainingGroup(tg, pool)),
+      TE.chain(tg =>
+         withDebug(insertTrainingGroup(tg, pool))(
+            `Inserting training group: ${JSON.stringify(tg)}`
+         )
+      ),
       TE.chain(maybeId =>
          pipe(
             maybeId,
