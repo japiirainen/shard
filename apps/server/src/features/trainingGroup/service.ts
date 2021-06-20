@@ -1,8 +1,9 @@
-import { pipe, TE } from '@/infrastructure/fpts'
+import { pipe, TE, A } from '@/infrastructure/fpts'
 import {
    NewTrainingGroup,
    findTrainingGroupbyId,
    insertTrainingGroup,
+   allTrainingGroups,
 } from '@/features/trainingGroup/repo'
 import { Id } from '@/infrastructure/Id'
 import {
@@ -47,9 +48,29 @@ export const createTrainingGroup = (
       )
    )
 
+export const findAllTrainingGroups = (
+   pool: Pool
+): TE.TaskEither<DBError | NoTrainingGroupsFound, Array<PublicTrainingGroup>> =>
+   pipe(
+      allTrainingGroups(pool),
+      TE.chain(maybeGroups =>
+         pipe(
+            maybeGroups,
+            TE.fromOption(() => new NoTrainingGroupsFound())
+         )
+      ),
+      TE.map(A.map(toPublicTrainingGroup))
+   )
+
 export class NoTrainingGroupFound extends CustomError implements ApplicationError {
    status = 404
    code = 'NoTrainingGroupFound'
+   log = true
+}
+
+export class NoTrainingGroupsFound extends CustomError implements ApplicationError {
+   status = 404
+   code = 'NoTrainingGroupsFound'
    log = true
 }
 

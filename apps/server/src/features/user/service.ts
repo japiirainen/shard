@@ -1,4 +1,4 @@
-import { TE, pipe } from '@/infrastructure/fpts'
+import { TE, pipe, A } from '@/infrastructure/fpts'
 
 import { Pool } from 'pg'
 
@@ -41,7 +41,7 @@ export const allUsers = (
             TE.fromOption(() => new NoUsersFound())
          )
       ),
-      TE.map(users => users.map(toPublicUser))
+      TE.map(A.map(toPublicUser))
    )
 
 export const getPublicProfile = (

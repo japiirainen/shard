@@ -1,5 +1,5 @@
 import { Id } from '@/infrastructure/Id'
-import { DbUser } from './User'
+import { DbUser, PublicUser } from './User'
 
 export type Privacy = 'open' | 'private'
 
@@ -20,3 +20,5 @@ export const toPublicTrainingGroup = (tg: DbTrainingGroup): PublicTrainingGroup 
    owner: tg.owner,
    privacy: tg.privacy,
 })
+
+export type TrainingGroupWithUser = PublicTrainingGroup & PublicUser
