@@ -14,6 +14,7 @@ import { Id } from '@/infrastructure/Id'
 import { DbUser, UserWithProfile } from '@/domain/User'
 import { Pool } from 'pg'
 import { DBError } from '@/infrastructure/Db'
+import { Resolver } from './Resolvers'
 
 export const userSchema = gql`
    type Query {
@@ -49,7 +50,7 @@ export const userSchema = gql`
 `
 
 type UserArgs = { id: Id<DbUser> }
-export const userResolvers = {
+export const userResolvers: Resolver = {
    Query: {
       user: (_: any, { id }: UserArgs, { pool }: MyContext) =>
          doTE(getPublicUser(id, pool)),
@@ -57,6 +58,7 @@ export const userResolvers = {
       profileUser: (_: any, { id }: UserArgs, { pool }: MyContext) =>
          doTE(getUserWithProfile(id, pool)),
    },
+   Mutation: {},
 }
 
 // --------------------------------------------------------------------------
