@@ -8,7 +8,7 @@ export type Resolver = {
    Mutation: object
 }
 
-const ResolverSemiGroup: Monoid<Resolver> = {
+const ResolverMonoid: Monoid<Resolver> = {
    concat: (r1, r2) => ({
       Query: {
          ...r1.Query,
@@ -22,7 +22,7 @@ const ResolverSemiGroup: Monoid<Resolver> = {
    empty: { Mutation: {}, Query: {} },
 }
 
-export const resolvers = concatAll(ResolverSemiGroup)([
+export const resolvers = concatAll(ResolverMonoid)([
    userResolvers,
    trainingGroupResolvers,
 ])
